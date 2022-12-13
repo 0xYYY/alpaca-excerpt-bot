@@ -91,8 +91,11 @@ async def send_excerpt(session_key: str, api_id: int, api_hash: str, excerpt: st
 
 
 @functions_framework.cloud_event
-async def main(_):
+async def main(event):
     """Entry point."""
+    if not event.get("alpaca"):
+        return
+
     user_session_key = get_env("USER_SESSION_KEY")
     bot_session_key = get_env("BOT_SESSION_KEY")
     api_id = int(get_env("API_ID"))
