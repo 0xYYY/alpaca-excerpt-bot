@@ -114,7 +114,7 @@ async def main():
 @functions_framework.cloud_event
 def handler(event):
     """Handle Pub/Sub event."""
-    if not event["data"]["message"]["attributes"].get("alpaca"):
+    if not event.data["message"]["attributes"].get("alpaca"):
         return
 
     asyncio.run(main())
