@@ -1,4 +1,5 @@
 """Alpaca Excerpt Bot."""
+import asyncio
 import datetime as dt
 import json
 import os
@@ -36,10 +37,11 @@ async def collect_messages(session_key: str, api_id: int, api_hash: str) -> List
         now = datetime.now(dt.timezone.utc)
         messages = [
             m
-            for m in client.iter_messages("defillama_tg", limit=8)
+            async for m in client.iter_messages("defillama_tg", limit=8)
             if (now - m.date).days == 0
             and len([e for e in m.entities if isinstance(e, MessageEntityUrl)]) > 1
         ]
+        log("info", f"Found {len(messages)} messages.")
 
         return messages
 
@@ -80,22 +82,23 @@ def construct_excerpt(content: str, topics: Set[str]) -> str:
     title = "**🦙 Excerpt from [DefiLlama Round Up](https://t.me/defillama_tg)**"
     excerpt = "\n\n".join(excerpts)
     excerpt = f"{title}\n\n{excerpt}" if excerpts else ""
+    log("info" if excerpt else "warn", f"Excerpt content: {excerpt}")
 
     return excerpt
 
 
 async def send_excerpt(session_key: str, api_id: int, api_hash: str, excerpt: str):
     """Send excerpt to channel."""
-    async with TelegramClient(StringSession(session_key), api_id, api_hash) as client:
-        await client.send_message("yyy_0x", excerpt, link_preview=False)
-
-
-@functions_framework.cloud_event
-async def main(event):
-    """Entry point."""
-    if not event.get("alpaca"):
+    # Skip sending if excerpt is empty.
+    if not excerpt:
         return
 
+    async with TelegramClient(StringSession(session_key), api_id, api_hash) as client:
+        await client.send_message("defillama_roundup_dev", excerpt, link_preview=False)
+
+
+async def main():
+    """Handle logic."""
     user_session_key = get_env("USER_SESSION_KEY")
     bot_session_key = get_env("BOT_SESSION_KEY")
     api_id = int(get_env("API_ID"))
@@ -106,3 +109,12 @@ async def main(event):
     content = "\n\n".join([m.message for m in messages[::-1]]).strip()
     excerpt = construct_excerpt(content, topics)
     await send_excerpt(bot_session_key, api_id, api_hash, excerpt)
+
+
+@functions_framework.cloud_event
+def handler(event):
+    """Handle Pub/Sub event."""
+    if not event["data"]["message"]["attributes"].get("alpaca"):
+        return
+
+    asyncio.run(main())

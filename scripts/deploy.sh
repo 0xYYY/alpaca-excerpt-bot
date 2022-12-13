@@ -19,5 +19,5 @@ SECRETS=(
 )
 
 gcloud functions deploy alpaca-excerpt-bot --region=us-central1 --memory=128Mi --runtime python310 \
-    --allow-unauthenticated --entry-point=main --trigger-topic=noon \
+    --allow-unauthenticated --entry-point=handler --trigger-topic=noon \
     --set-secrets="$(join_array "${SECRETS[@]}")" --gen2
