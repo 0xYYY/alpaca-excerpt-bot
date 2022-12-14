@@ -17,7 +17,7 @@
 
 scripts
 .envrc
-.pre-commit-config.yanml
+.pre-commit-config.yaml
 justfile
 poetry.lock
 pyproject.toml
