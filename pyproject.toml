@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "alpaca-excerpt-bot"
+version = "0.1.0"
+description = "Forward excerpts of specific topics from DefiLlama Round Up to my Telegram channel."
+authors = ["0xYYY <0xYYY@pm.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+functions-framework = "^3.0.0"
+telethon = "^1.26.0"
+
+[tool.ruff]
+line-length = 100
+select = ["F", "E", "W", "C90", "I", "D", "PLC", "PLE", "PLR", "PLW"]
+# google-style docstrings
+extend-ignore = [
+    "D203",
+    "D204",
+    "D213",
+    "D215",
+    "D400",
+    "D404",
+    "D406",
+    "D407",
+    "D408",
+    "D409",
+    "D413",
+    "D107",
+]
+
+[tool.black]
+line-length = 100
+
+[[tool.mypy.overrides]]
+module = [
+    "telethon.*",
+    "functions_framework",
+]
+ignore_missing_imports = true
