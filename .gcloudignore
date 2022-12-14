@@ -14,3 +14,11 @@
 .gitignore
 
 #!include:.gitignore
+
+scripts
+.envrc
+.pre-commit-config.yanml
+justfile
+poetry.lock
+pyproject.toml
+README.md
