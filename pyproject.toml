@@ -2,7 +2,7 @@
 name = "alpaca-excerpt-bot"
 version = "0.1.0"
 description = "Forward excerpts of specific topics from DefiLlama Round Up to my Telegram channel."
-authors = ["0xYYY <0xYYY@pm.com>"]
+authors = ["0xYYY <0xYYY@pm.me>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
