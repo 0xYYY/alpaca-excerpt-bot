@@ -8,6 +8,7 @@ from datetime import datetime
 from typing import List, Set
 
 import functions_framework
+import ipdb
 from telethon.sessions import StringSession
 from telethon.sync import TelegramClient
 from telethon.tl.types import Message, MessageEntityBold, MessageEntityUrl
@@ -61,14 +62,6 @@ class Bot:
         self.api_id = int(self.get_env(API_ID))
         self.api_hash = self.get_env(API_HASH)
 
-    async def run(self):
-        """Execute bot."""
-        messages = await self.collect_messages()
-        topics = self.extract_topics(messages)
-        content = "\n\n".join([m.message.strip() for m in messages[::-1]]).strip()
-        excerpt = self.construct_excerpt(content, topics)
-        await self.send_excerpt(excerpt)
-
     def get_env(self, key: str) -> str:
         """Get environment variables."""
         val = os.getenv(key)
@@ -77,6 +70,14 @@ class Bot:
             sys.exit()
 
         return val
+
+    async def run(self):
+        """Execute bot."""
+        messages = await self.collect_messages()
+        topics = self.extract_topics(messages)
+        content = "\n\n".join([m.message.strip() for m in messages[::-1]]).strip()
+        excerpt = self.construct_excerpt(content, topics)
+        await self.send_excerpt(excerpt)
 
     async def collect_messages(self) -> List[Message]:
         """Collect news messages."""
@@ -122,8 +123,12 @@ class Bot:
         current_topic = ""
         excerpts = []
         for line in content.split("\n\n"):
-            if line in topics:
-                current_topic = line
+            # Accounts for the cases where the content is split into 2 messages, and the second one
+            # starts with "2/2", e.g. "2/2 Read 📚".
+            for topic in topics:
+                if line.endswith(topic):
+                    current_topic = topic
+                    break
             if current_topic in TARGET_TOPICS:
                 if line in topics:
                     line = f"**{line}**"
@@ -158,3 +163,10 @@ def handler(event):
 
     bot = Bot()
     asyncio.run(bot.run())
+
+
+if __name__ == "__main__":
+    with ipdb.launch_ipdb_on_exception():
+        sys.breakpointhook = ipdb.set_trace
+        bot = Bot()
+        asyncio.run(bot.run())

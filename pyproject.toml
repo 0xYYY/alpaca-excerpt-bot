@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 functions-framework = "^3.0.0"
 telethon = "^1.26.0"
+ipdb = "^0.13.11"
 
 [tool.ruff]
 line-length = 100
@@ -34,7 +35,8 @@ line-length = 100
 
 [[tool.mypy.overrides]]
 module = [
-    "telethon.*",
     "functions_framework",
+    "ipdb",
+    "telethon.*",
 ]
 ignore_missing_imports = true
