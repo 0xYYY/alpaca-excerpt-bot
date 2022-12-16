@@ -18,6 +18,8 @@ Extract news under topics of interest (MEV, security, development) from [DefiLla
 -   [`mypy`](https://github.com/python/mypy): static type checking.
 -   [`poetry`](https://github.com/python-poetry/poetry): package management.
 -   [`pre-commit`](https://github.com/pre-commit/pre-commit): pre-commit hooks.
+-   [`just`](https://github.com/casey/just): manage commands.
+-   [`direnv`](https://github.com/direnv/direnv): autoloading vritual environment.
 
 ### Service/API
 
