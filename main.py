@@ -128,6 +128,7 @@ class Bot:
             for topic in topics:
                 if line.endswith(topic):
                     current_topic = topic
+                    line = topic
                     break
             if current_topic in TARGET_TOPICS:
                 if line in topics:

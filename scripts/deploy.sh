@@ -18,6 +18,6 @@ SECRETS=(
     "BOT_SESSION_KEY=ALPACA_TELEGRAM_BOT_SESSION_KEY:latest"
 )
 
-gcloud functions deploy alpaca-excerpt-bot --region=us-central1 --memory=128Mi --runtime python310 \
+gcloud functions deploy alpaca-excerpt-bot --region=us-central1 --memory=256Mi --runtime python310 \
     --allow-unauthenticated --entry-point=handler --trigger-topic=noon \
     --set-secrets="$(join_array "${SECRETS[@]}")" --gen2
